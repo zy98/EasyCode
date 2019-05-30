@@ -1,0 +1,28 @@
+<RCC>
+    <qresource prefix="/Res">
+        <file>Icon/aligncenter.png</file>
+        <file>Icon/alignleft.png</file>
+        <file>Icon/alignright.png</file>
+        <file>Icon/autowrap.png</file>
+        <file>Icon/copy.png</file>
+        <file>Icon/cut.png</file>
+        <file>Icon/delete.png</file>
+        <file>Icon/find.png</file>
+        <file>Icon/fontsizedown.png</file>
+        <file>Icon/fontsizeup.png</file>
+        <file>Icon/goto.png</file>
+        <file>Icon/logo.png</file>
+        <file>Icon/new.png</file>
+        <file>Icon/notepad.ico</file>
+        <file>Icon/open.png</file>
+        <file>Icon/paste.png</file>
+        <file>Icon/print.png</file>
+        <file>Icon/redo.png</file>
+        <file>Icon/replace.png</file>
+        <file>Icon/save.png</file>
+        <file>Icon/save_as.png</file>
+        <file>Icon/undo.png</file>
+        <file>Icon/coding.ico</file>
+        <file>Icon/book.ico</file>
+    </qresource>
+</RCC>
