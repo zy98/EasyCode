@@ -41,7 +41,6 @@ protected:
 
 protected slots:
     //file
-    void slotNew();
     void slotOpen();
     void slotSave();
     void slotSaveAs();
@@ -54,18 +53,17 @@ protected slots:
     void slotGoto();
 
     //view
-    void slotShowToolBar(bool a);
-    void slotShowStatusBar(bool a);
+//--    void slotShowToolBar(bool a);
+//    void slotShowStatusBar(bool a);
 
     //settings
-    void slotAutoWrap(bool a);
+    //--void slotAutoWrap(bool a);
     void slotFont();
     void slotChangeFont(QFont f);
     void slotChangeLanguage();
 
     //help
     void slotUser();
-    void slotAbout();
 
     //other
     void slotTabChanged(int index);
@@ -95,7 +93,7 @@ private:
     void initMainWindow();
     void initTabWidget();
     void initStatusBar();
-    int CreateNewTab();//
+    int CreateNewTab();
     void ConnectTextEdit();//
 
     //辅助功能函数封装

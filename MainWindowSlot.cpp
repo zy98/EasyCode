@@ -1,5 +1,4 @@
-﻿#include "AboutDialog.h"
-#include "MainWindow.h"
+﻿#include "MainWindow.h"
 #include "ui_MainWindow.h"
 
 #include <QDebug>
@@ -10,13 +9,7 @@
 
 #include <Qsci/qsciprinter.h>
 
-
 char MainWindow::num[64]={0};
-
-void MainWindow::slotNew()
-{
-    CreateNewTab();
-}
 
 void MainWindow::slotOpen()
 {
@@ -117,9 +110,7 @@ void MainWindow::slotGoto()
     int ln=QInputDialog::getInt(this,tr("Goto"),tr("line:"),1,1,line,1,&ok,
                                 Qt::WindowCloseButtonHint);
     if(ok)
-    {
         mainEditor->setCursorPosition(ln-1,0);
-    }
 }
 
 void MainWindow::slotTabChanged(int index)
@@ -196,15 +187,8 @@ void MainWindow::slotUser()
         QDesktopServices::openUrl(QUrl("www.baidu.com"));
 }
 
-void MainWindow::slotAbout()
-{
-    AboutDialog(this).exec();
-}
-
 void MainWindow::slotFileWatcher(const QString &path)
 {
-    qDebug()<<sender()<< " "<<path<<"\n";
-
     int i;
     TextEdit* temp=NULL;
     for(i=0;i<tabWidget->count();i++)
@@ -273,7 +257,7 @@ void MainWindow::slotChangeLanguage()
         }
         else
         {
-            showErrorMessage(tr("can not find this translation file!"));
+            statusBar()->showMessage(tr("can not find this translation file!"),5000);
         }
     }
     else
@@ -298,21 +282,3 @@ void MainWindow::slotLineChanged()
     mainEditor->setMarginWidth(0,getLineString());
 }
 
-void MainWindow::slotShowToolBar(bool a)
-{
-        ui->actionToolBar->setChecked(a);
-        a ? ui->mainToolBar->show() : ui->mainToolBar->hide();
-}
-
-//alter
-void MainWindow::slotShowStatusBar(bool a)
-{
-        ui->actionStatusBar->setChecked(a);
-        a ? ui->statusBar->show() : ui->statusBar->hide();
-}
-
-//alter
-void MainWindow::slotAutoWrap(bool a)
-{
-    mainEditor->setWrapMode(a ? QsciScintilla::WrapCharacter : QsciScintilla::WrapNone);
-}

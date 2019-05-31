@@ -22,6 +22,9 @@ public:
     void setTextFont(QFont font, const QString &line);
     void setFilePath(QString path);
     void wheelEvent(QWheelEvent* evt);
+    void dragEnterEvent(QDragEnterEvent *evt);
+    void dropEvent(QDropEvent *evt);
+
     //void keyPressEvent(QKeyEvent* evt);
     //void keyReleaseEvent(QKeyEvent* evt);
 

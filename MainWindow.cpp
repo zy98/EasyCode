@@ -1,8 +1,10 @@
 ﻿#include "MainWindow.h"
 #include "ui_MainWindow.h"
 #include "AppConfig.h"
+#include "AboutDialog.h"
 
 #include <QTextStream>
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -32,7 +34,7 @@ void MainWindow::initMainWindow()
 
     readConfig();//读取上一次配置
 
-    connect(ui->actionNew,SIGNAL(triggered()),this,SLOT(slotNew()));
+    connect(ui->actionNew,&QAction::triggered,this,&MainWindow::CreateNewTab);
     connect(ui->actionOpen,SIGNAL(triggered()),this,SLOT(slotOpen()));
     connect(ui->actionSave,SIGNAL(triggered()),this,SLOT(slotSave()));
     connect(ui->actionSaveAs,SIGNAL(triggered()),this,SLOT(slotSaveAs()));
@@ -40,17 +42,25 @@ void MainWindow::initMainWindow()
     connect(ui->actionRename,SIGNAL(triggered()),this,SLOT(slotRename()));
     connect(ui->actionPrint,SIGNAL(triggered()),this,SLOT(slotPrint()));
     connect(ui->actionExit,SIGNAL(triggered()),this,SLOT(close()));
-    connect(ui->actionAutoWrap,SIGNAL(triggered(bool)),this,SLOT(slotAutoWrap(bool)));
+
+    //some short slot function use with lambda
+    //autowrap & toolbar & statusba & aboutdialog
+    connect(ui->actionAutoWrap, &QAction::triggered,
+            [&](bool a){mainEditor->setWrapMode(a ? QsciScintilla::WrapCharacter : QsciScintilla::WrapNone);});
+    connect(ui->actionToolBar,&QAction::triggered,
+            [&](bool a){ui->actionToolBar->setChecked(a); a ? ui->mainToolBar->show() : ui->mainToolBar->hide();});
+    connect(ui->actionStatusBar,&QAction::triggered,
+            [&](bool a){ui->actionStatusBar->setChecked(a); a ? ui->statusBar->show() : ui->statusBar->hide();});
+    connect(ui->actionAbout,&QAction::triggered,[&](){AboutDialog(this).exec();});
+
+
     connect(ui->actionFont,SIGNAL(triggered()),this,SLOT(slotFont()));
     connect(ui->actionGoto,SIGNAL(triggered()),this,SLOT(slotGoto()));
     connect(ui->actionFind,SIGNAL(triggered()),this,SLOT(slotFind()));
     connect(ui->actionChinese,SIGNAL(triggered()),this,SLOT(slotChangeLanguage()));
     connect(ui->actionEnglish,SIGNAL(triggered()),this,SLOT(slotChangeLanguage()));
 
-    connect(ui->actionToolBar,SIGNAL(triggered(bool)),this,SLOT(slotShowToolBar(bool)));
-    connect(ui->actionStatusBar,SIGNAL(triggered(bool)),this,SLOT(slotShowStatusBar(bool)));
     connect(ui->actionUser,SIGNAL(triggered()),this,SLOT(slotUser()));
-    connect(ui->actionAbout,SIGNAL(triggered()),this,SLOT(slotAbout()));
     connect(watcher,SIGNAL(fileChanged(QString)),this,SLOT(slotFileWatcher(QString)));
 
     connect(ui->actionCSharp,SIGNAL(triggered()),this,SLOT(slotInitCS()));
@@ -114,9 +124,7 @@ void MainWindow::closeEvent(QCloseEvent* evt)
     }
 
     if(!saveList.empty())
-    {
         ret=showQuestionDialog(tr("Save"),content);
-    }
 
     switch(ret)
     {
@@ -143,14 +151,9 @@ void MainWindow::closeEvent(QCloseEvent* evt)
 void MainWindow::dragEnterEvent(QDragEnterEvent* evt)
 {
     if(evt->mimeData()->hasUrls())
-    {
         evt->acceptProposedAction();
-    }
     else
-    {
         evt->ignore();
-    }
-
 }
 
 void MainWindow::dropEvent(QDropEvent* evt)
@@ -200,7 +203,6 @@ void MainWindow::setTitle()
     //如果tab以星号开头，则加上星号
     if(mainEditor->isModified())
         s="*";
-
 
     if(path != "")
     {
@@ -318,9 +320,9 @@ void MainWindow::readConfig()
         //初始状态都为true，如果为false则改变状态
         if(!config.isAutoWrap())
         {
-
             ui->actionAutoWrap->setChecked(false);
-            slotAutoWrap(false);
+            mainEditor->setWrapMode(QsciScintilla::WrapNone);
+            //--slotAutoWrap(false);
         }
 
         if(!config.isTbVisible())
@@ -534,9 +536,8 @@ void MainWindow::deleteTab(int index)
     setNum0(index);
 
     if(tabWidget->count() == 1)
-    {
         CreateNewTab();
-    }
+
     tabWidget->removeTab(index);
 }
 
@@ -553,9 +554,7 @@ int MainWindow::CreateNewTab()
 
             //如果没有新建则出错
             if(index == -1)
-            {
                 showErrorMessage(tr("can not create a new tab"));
-            }
 
             tabWidget->setCurrentIndex(index);
             num[i]=1;//新建完成后置1

@@ -1,6 +1,7 @@
 ﻿#include "TextEdit.h"
 #include <QDebug>
 #include <QColor>
+#include <QMimeData>
 
 
 TextEdit::TextEdit(QWidget *parent) : QsciScintilla(parent)
@@ -25,12 +26,9 @@ void TextEdit::initWidget()
     setFolding(QsciScintilla::BoxedTreeFoldStyle,1);
     setMarginWidth(1,15);
 
-    //other margin
+    //all margins
     setMarginsBackgroundColor(QColor("#CCCCCC"));
     setMarginsForegroundColor(QColor("#272727"));
-
-
-
 
 //    //自动补全功能
 //    apis=new QsciAPIs(textLexer);
@@ -151,13 +149,22 @@ void TextEdit::setFilePath(QString path)
     filePath=path;
 }
 
+void TextEdit::dragEnterEvent(QDragEnterEvent* evt)
+{
+    evt->ignore();
+}
+
+void TextEdit::dropEvent(QDropEvent* evt)
+{
+    evt->ignore();
+}
+
 void TextEdit::wheelEvent(QWheelEvent *evt)
 {
     if(evt->modifiers() == Qt::ControlModifier)
         evt->ignore();
     else
         QsciScintilla::wheelEvent(evt);
-
 }
 
 /*
